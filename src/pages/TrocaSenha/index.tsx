@@ -155,7 +155,7 @@ export default function TrocaSenha() {
                             >
                                 
                                 {(props:FormikProps<TrocaSenhaType>) => {
-                                    // console.log(props.errors);
+                                    console.log(props.errors);
                                     
                                     return(
                                     <Form className='form w-100'>
