@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie'
 export default function Reset() {
     const [cookies, setCookies, removeCookies] = useCookies(['login', 'user', 'consent', 'theme', 'image', 'exames', 'comunicados'])
 
-    
+   // const [cookies1 , removeCookie1] = useCookies();
     const handleClick = () => {
         removeCookies('user')
         removeCookies('user', {path:'/'})
@@ -21,6 +21,8 @@ export default function Reset() {
         removeCookies('exames', {path:'/'})
         removeCookies('comunicados')
         removeCookies('comunicados', {path:'/'})
+
+        //Object.keys(cookies1).forEach(cookie => removeCookie1(cookie, { path: "/" }));
         window.location.href = '/acesso-unificado/#/';
     }
     
@@ -30,7 +32,7 @@ export default function Reset() {
                 <Login_LeftBanner />
                 <div className="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 align-self-center">
                     <div className='text-center'>
-                        <h3>Clique no botão para deletar os Cookies</h3>
+                        <h3>Clique no botão para deletar os Cookies</h3><br>
                         <button className='btn btn-success' onClick={()=>handleClick()}>Deletar cookies</button>
                     </div>
                 </div>
