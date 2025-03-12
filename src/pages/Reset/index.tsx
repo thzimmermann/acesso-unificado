@@ -32,7 +32,7 @@ export default function Reset() {
                 <Login_LeftBanner />
                 <div className="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 align-self-center">
                     <div className='text-center'>
-                        <h3>Clique no botão para deletar os Cookies</h3><br>
+                        <h3>Clique no botão para deletar os Cookies</h3></br>
                         <button className='btn btn-success' onClick={()=>handleClick()}>Deletar cookies</button>
                     </div>
                 </div>
