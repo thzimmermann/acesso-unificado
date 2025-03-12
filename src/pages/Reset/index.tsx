@@ -21,7 +21,7 @@ export default function Reset() {
         removeCookies('exames', {path:'/'})
         removeCookies('comunicados')
         removeCookies('comunicados', {path:'/'})
-        location.reload()
+        window.location.href = '/acesso-unificado/#/';
     }
     
     return (
