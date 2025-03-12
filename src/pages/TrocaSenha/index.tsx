@@ -26,6 +26,9 @@ export default function TrocaSenha() {
     const [loading, setLoading] = useState<boolean>(false)
     const [externo, setExterno] = useState<boolean>(false)
     const [senha, setSenha] = useState<boolean>(false)
+
+    const {token, id} = useParams()
+
     const Schema = Yup.object().shape({
         tipo: Yup.string(),
         cidade_natal: Yup.string().when('tipo',
@@ -64,15 +67,19 @@ export default function TrocaSenha() {
                 }
             }
         ),
+        password_now: Yup.string().min(5, 'A senha deve conter 5 caractéres.').when([], {
+            is: () => !!token && !id,
+            then: (schema) => schema.required('A senha atual é obrigatória.'),
+            otherwise: (schema) => schema.notRequired()
+        }),
         password: Yup.string().min(5, 'A senha deve conter 5 caractéres.').matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
             "Digite uma senha mais forte. Deve conter letras maiúsculas, números e caracteres especiais."
           ).required('Este campo é obrigatório.'),
         password_confirmation: Yup.string().min(5, 'A senha deve conter 5 caractéres.').oneOf([Yup.ref('password')], 'As senhas não são iguais.').required('Este campo é obrigatório.'),
     })
-    const {token, id} = useParams()
-    const navigate = useNavigate()
 
+    const navigate = useNavigate()
     const handleSubmit = async (values:FormikValues, action:FormikHelpers<TrocaSenhaType>) => {
         action.setSubmitting(true)
         
@@ -139,7 +146,8 @@ export default function TrocaSenha() {
                                     id_user: id || dados.id_user,
                                     token: token || dados.token,
                                     password: '',
-                                    password_confirmation: ''
+                                    password_confirmation: '',
+                                    password_now: ''
                                 }}
                                 validationSchema={Schema}
                                 onSubmit={handleSubmit}
