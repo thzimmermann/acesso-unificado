@@ -43,6 +43,7 @@ export type TrocaSenhaType = {
     token: string
     password: string
     password_confirmation:string
+    password_now?:string
 }
 export type TrocaSenhaCpfType = {
     colaborador: boolean,
