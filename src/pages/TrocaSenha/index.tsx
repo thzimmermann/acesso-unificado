@@ -3,7 +3,6 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { FormikHelpers, FormikProps, FormikValues } from 'formik/dist/types'
 import * as Yup from 'yup'
 import { Tooltip } from 'react-tooltip'
-
 import { TrocaSenhaCpfType, TrocaSenhaType } from '../../assets/types/type'
 import { Login_LeftBanner } from '../../components/Login_LeftBanner'
 import validateRequest from '../../helpers/validateRequest'
@@ -77,16 +76,30 @@ export default function TrocaSenha() {
     const handleSubmit = async (values:FormikValues, action:FormikHelpers<TrocaSenhaType>) => {
         action.setSubmitting(true)
         
-        //requisiçao
-        try {
-            let res = await api.post('cadastro/restorepass', values)
-            validateRequest(res)
-            navigate('/')
-            
-        } catch (error) {
-            validateRequest(error)
-            
+        if (values.password_now) {
+            const dadosFiltrados = {
+                email: atob(values.token),
+                senha_atual: values.password_now,
+                password: values.password
+            };
+            try {
+                let res = await api.post('cadastro/passexpire', dadosFiltrados)
+                validateRequest(res)
+                navigate('/')
+            } catch (error) {
+                validateRequest(error)
+            }
+        } else {
+            //requisiçao
+            try {
+                let res = await api.post('cadastro/restorepass', values)
+                validateRequest(res)
+                navigate('/')
+            } catch (error) {
+                validateRequest(error)
+            }
         }
+
         action.setSubmitting(false)
     }
     const handleCpf = async (cpf:string, setFieldValue:any) => {
@@ -233,8 +246,43 @@ export default function TrocaSenha() {
                                                 </div>
                                             </>
                                         }
+
+                                        {!id && token &&
+                                            <>
+                                                <div className="fv-row d-flex flex-stack flex-wrap fs-base fw-semibold mb-8 login-password position-relative">
+                                                    <ChangePassword
+                                                        tabIndex={1}
+                                                        name='password_now'
+                                                        placeholder='Senha atual'
+                                                        errors={props.errors.password_now}
+                                                        touched={props.touched.password_now}
+                                                    />
+                                                    <ErrorMessage name='password_now' component={'small'} className='invalid-feedback' />
+                                                </div>
+                                                <div className="fv-row d-flex flex-stack flex-wrap fs-base fw-semibold mb-8 login-password position-relative">
+                                                    <ChangePassword
+                                                        tabIndex={2}
+                                                        name='password'
+                                                        placeholder='Nova senha'
+                                                        errors={props.errors.password}
+                                                        touched={props.touched.password}
+                                                    />
+                                                    <ErrorMessage name='password' component={'small'} className='invalid-feedback' />
+                                                </div>
+                                                <div className="fv-row d-flex flex-stack flex-wrap fs-base fw-semibold mb-8 login-password position-relative">
+                                                    <ChangePassword
+                                                        tabIndex={3}
+                                                        name='password_confirmation'
+                                                        placeholder='Confirmar senha'
+                                                        errors={props.errors.password_confirmation}
+                                                        touched={props.touched.password_confirmation}
+                                                    />
+                                                    <ErrorMessage name='password_confirmation' component={'small'} className='invalid-feedback' />
+                                                </div>
+                                            </>
+                                        }
                                         
-                                        {(dados.colaborador || (id && token)) && 
+                                        {(dados.colaborador || (id && token) || (!id && token)) &&
                                         <div className="d-grid mt-8">
                                             <button type={'submit'} id="kt_sign_in_submit" className="btn btn-success">
                                                 {props.isSubmitting ?
